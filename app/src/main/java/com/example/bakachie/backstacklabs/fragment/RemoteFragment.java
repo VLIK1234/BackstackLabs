@@ -7,7 +7,6 @@ import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentActivity;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentTransaction;
-import android.text.TextUtils;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -34,17 +33,13 @@ public class RemoteFragment extends Fragment implements View.OnClickListener {
         view.findViewById(R.id.open_second).setOnClickListener(this);
         view.findViewById(R.id.open_third).setOnClickListener(this);
         view.findViewById(R.id.open_forth).setOnClickListener(this);
-        view.findViewById(R.id.remove_first).setOnClickListener(this);
-        view.findViewById(R.id.remove_second).setOnClickListener(this);
-        view.findViewById(R.id.remove_third).setOnClickListener(this);
-        view.findViewById(R.id.remove_forth).setOnClickListener(this);
     }
 
     @Override
     public void onClick(View v) {
         switch (v.getId()) {
             case R.id.to_first:
-                popTo(FirstFragment.class.getName());
+                backToRootFragment();
                 break;
             case R.id.to_second:
                 popTo(SecondFragment.class.getName());
@@ -67,29 +62,19 @@ public class RemoteFragment extends Fragment implements View.OnClickListener {
             case R.id.open_forth:
                 open(ForthFragment.class.getName());
                 break;
-            case R.id.remove_first:
-                remove(FirstFragment.class.getName());
-                break;
-            case R.id.remove_second:
-                remove(SecondFragment.class.getName());
-                break;
-            case R.id.remove_third:
-                remove(ThirdFragment.class.getName());
-                break;
-            case R.id.remove_forth:
-                remove(ForthFragment.class.getName());
-                break;
         }
     }
 
     private void popTo(final String fragmentName) {
-        FragmentActivity activity = getActivity();
-        if (activity != null) {
-            activity.getSupportFragmentManager().popBackStack(fragmentName, FragmentManager.POP_BACK_STACK_INCLUSIVE);
-        }
+        popTo(fragmentName, 0);
     }
 
-    private String previousFragment;
+    private void popTo(final String fragmentName, final int bakcstackFlag) {
+        FragmentActivity activity = getActivity();
+        if (activity != null) {
+            activity.getSupportFragmentManager().popBackStack(fragmentName, bakcstackFlag);
+        }
+    }
 
     private void open(final String fragmentName) {
         FragmentActivity activity = getActivity();
@@ -99,24 +84,19 @@ public class RemoteFragment extends Fragment implements View.OnClickListener {
             FragmentTransaction fragmentTransaction = fm.beginTransaction();
             fragmentTransaction
                     .replace(R.id.fragment_container, Fragment.instantiate(activity, fragmentName), fragmentName);
-            fragmentTransaction.addToBackStack(previousFragment);
-//            if (!TextUtils.isEmpty(previousFragment)) {
-//                fragmentTransaction.addToBackStack(previousFragment);
-//            }
+            fragmentTransaction.addToBackStack(fragmentName);
             fragmentTransaction.commit();
-            previousFragment = fragmentName;
         }
     }
-
-    private void remove(final String fragmentName) {
+    
+    private void backToRootFragment() {
         FragmentActivity activity = getActivity();
-
+        
         if (activity != null) {
             FragmentManager fm = activity.getSupportFragmentManager();
-            FragmentTransaction fragmentTransaction = fm.beginTransaction();
-            fragmentTransaction
-                    .remove(fm.findFragmentByTag(fragmentName))
-                    .commit();
+            if (fm.getBackStackEntryCount() > 0) {
+                popTo(fm.getBackStackEntryAt(0).getName(), FragmentManager.POP_BACK_STACK_INCLUSIVE);
+            }
         }
     }
 }

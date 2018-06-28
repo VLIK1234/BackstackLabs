@@ -56,33 +56,6 @@
         app:layout_constraintStart_toEndOf="@id/to_third"
         app:layout_constraintTop_toBottomOf="@+id/to_first"
         android:text="St Forth"/>
-    <Button
-        android:id="@+id/remove_first"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        app:layout_constraintTop_toBottomOf="@+id/open_first"
-        android:text="Rv First"/>
-    <Button
-        android:id="@+id/remove_second"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        app:layout_constraintStart_toEndOf="@id/remove_first"
-        app:layout_constraintTop_toBottomOf="@+id/open_first"
-        android:text="Rv Second"/>
-    <Button
-        android:id="@+id/remove_third"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        app:layout_constraintStart_toEndOf="@id/remove_second"
-        app:layout_constraintTop_toBottomOf="@+id/open_first"
-        android:text="Rv Third"/>
-    <Button
-        android:id="@+id/remove_forth"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        app:layout_constraintStart_toEndOf="@id/to_third"
-        app:layout_constraintTop_toBottomOf="@+id/open_first"
-        android:text="Rv Forth"/>
 
 
 </android.support.constraint.ConstraintLayout>

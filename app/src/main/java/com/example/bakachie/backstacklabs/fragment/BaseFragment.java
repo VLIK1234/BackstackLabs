@@ -10,31 +10,47 @@ import android.view.View;
 import android.widget.Button;
 
 import com.example.bakachie.backstacklabs.R;
+import com.example.bakachie.backstacklabs.data.StackBehaviour;
 
 public abstract class BaseFragment extends Fragment {
+
+    private String m_currentFragment;
 
     @Override
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
 
-        final String name = this.getClass().getName();
+        m_currentFragment = this.getClass().getName();
         Button secondFragment = view.findViewById(R.id.bt_next_fragment);
         secondFragment.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                FragmentActivity activity = getActivity();
-                if (activity != null) {
-                    FragmentManager fm = activity.getSupportFragmentManager();
-                    fm.beginTransaction()
-                            .replace(R.id.fragment_container, Fragment.instantiate(activity, nextFragmentName()), nextFragmentName())
-                            .addToBackStack(name)
-                            .commit();
-                }
+                nextFragment();
             }
         });
+
+        if (StackBehaviour.needToBeMissed(m_currentFragment)) {
+            nextFragment();
+        }
     }
 
-//    protected abstract String currentFragmentName();
+    private void nextFragment() {
+        FragmentActivity activity = getActivity();
+        if (activity != null) {
+            FragmentManager fm = activity.getSupportFragmentManager();
+
+            boolean needToBeMissed = StackBehaviour.needToBeMissed(m_currentFragment);
+
+            if (needToBeMissed) {
+                fm.popBackStack();
+            }
+
+            fm.beginTransaction()
+                    .replace(R.id.fragment_container, Fragment.instantiate(activity, nextFragmentName()), nextFragmentName())
+                    .addToBackStack(nextFragmentName())
+                    .commit();
+        }
+    }
 
     protected abstract String nextFragmentName();
 }
